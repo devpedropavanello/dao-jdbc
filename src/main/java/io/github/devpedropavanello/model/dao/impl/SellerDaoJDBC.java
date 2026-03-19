@@ -6,7 +6,12 @@ import io.github.devpedropavanello.model.dao.SellerDao;
 import io.github.devpedropavanello.model.entities.Department;
 import io.github.devpedropavanello.model.entities.Seller;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,7 +69,7 @@ public class SellerDaoJDBC implements SellerDao {
         try {
             st = conn.prepareStatement(
                     "UPDATE seller "
-                        + "SET Name ?,  Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? "
+                        + "SET Name = ?,  Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? "
                         + "WHERE id = ?");
 
             st.setString(1, obj.getName());
@@ -92,7 +97,7 @@ public class SellerDaoJDBC implements SellerDao {
 
             st.setInt(1, id);
 
-            st.executeQuery();
+            st.executeUpdate();
         }
         catch (SQLException e) {
             throw new DbException(e.getMessage());
@@ -197,7 +202,7 @@ public class SellerDaoJDBC implements SellerDao {
                    "SELECT seller.*,department.Name as DepName "
                    + "FROM seller INNER JOIN department "
                    + "ON seller.DepartmentId = department.Id "
-                   + "WHERE seller.DepartmentId = ?"
+                   + "WHERE DepartmentId = ? "
                    + "ORDER BY Name");
 
            st.setInt(1, department.getId());
